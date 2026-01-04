@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>OmStore</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="OmStore amanah, mudah, dan efisien untuk beli item digital favoritmu." />
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --bg-card: #020617;
+      --accent: #6366f1;
+      --accent-strong: #4f46e5;
+      --accent-soft: rgba(99, 102, 241, 0.18);
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --border: rgba(148, 163, 184, 0.35);
+      --danger: #f97373;
+      --radius-lg: 18px;
+      --radius-xl: 22px;
+      --radius-full: 999px;
+      --shadow-soft: 0 20px 40px rgba(15, 23, 42, 0.95);
+      --transition: 0.22s ease-out;
+      --transition-fast: 0.16s ease-out;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 45%, #000 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1120px;
+      background: radial-gradient(circle at top left, rgba(30, 64, 175, 0.4), transparent 45%),
+                  linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.94));
+      border-radius: 28px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .app-shell::before,
+    .app-shell::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(40px);
+      opacity: 0.55;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app-shell::before {
+      width: 250px;
+      height: 250px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.5), transparent);
+      top: -80px;
+      left: -40px;
+    }
+
+    .app-shell::after {
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle, rgba(129, 140, 248, 0.5), transparent);
+      bottom: -80px;
+      right: -40px;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      padding: 20px 20px 24px;
+    }
+
+    /* Header + top bar */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+      margin-bottom: 18px;
+    }
+
+    .logo-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      background: conic-gradient(from 200deg, #e5e7eb, #6366f1, #22c55e, #e5e7eb);
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.8);
+    }
+
+    .logo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e5e7eb;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.06em;
+    }
+
+    .header-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .header-top-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .store-name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .live-chip {
+      font-size: 0.64rem;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(74, 222, 128, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(22, 163, 74, 0.16);
+      color: #bbf7d0;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.3);
+    }
+
+    .header-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+    }
+
+    /* Cart button */
+    .cart-button {
+      position: relative;
+      border-radius: var(--radius-full);
+      padding: 6px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      transition: var(--transition-fast);
+    }
+
+    .cart-button svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .cart-button:hover {
+      border-color: rgba(191, 219, 254, 0.95);
+      color: #e5e7eb;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
+      background: #020617;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -4px;
+      right: -6px;
+      background: #f97373;
+      color: #fff;
+      font-size: 0.6rem;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(248, 250, 252, 0.9);
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9);
+    }
+
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 20px;
+      margin-bottom: 24px;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+    }
+
+    .hero-text h1 span.highlight {
+      background: linear-gradient(120deg, #a5b4fc, #fbbf24, #34d399);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 0.7rem;
+      margin-bottom: 8px;
+    }
+
+    .hero-badge {
+      border-radius: var(--radius-full);
+      padding: 4px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.94);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-soft);
+    }
+
+    .hero-badge-emoji {
+      font-size: 0.9rem;
+    }
+
+    .hero-text p {
+      font-size: 0.82rem;
+      color: var(--text-soft);
+      max-width: 460px;
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-primary {
+      border-radius: var(--radius-full);
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: radial-gradient(circle at top left, var(--accent), var(--accent-strong));
+      color: #e5e7eb;
+      box-shadow: 0 12px 28px rgba(79, 70, 229, 0.75);
+      transition: var(--transition-fast);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      border-radius: var(--radius-full);
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.94);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(191, 219, 254, 0.95);
+      color: #e5e7eb;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.9);
+    }
+
+    .hero-media {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      padding: 10px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.98));
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 16px 38px rgba(15, 23, 42, 0.95);
+    }
+
+    .hero-media-img {
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      aspect-ratio: 4 / 3;
+      background: radial-gradient(circle at 20% 20%, #1f2937, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-media-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.88;
+      mix-blend-mode: screen;
+    }
+
+    .hero-floating {
+      position: absolute;
+      bottom: 10px;
+      left: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-floating strong {
+      color: #a5b4fc;
+    }
+
+    /* Products section */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .section-header h2 {
+      font-size: 1rem;
+    }
+
+    .section-header p {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-soft);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 12px;
+      }
+      .app-shell {
+        border-radius: 20px;
+      }
+      header {
+        flex-wrap: wrap;
+      }
+      .hero {
+        grid-template-columns: 1fr;
+      }
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .product-card {
+      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.12), rgba(15, 23, 42, 0.98));
+      border-radius: var(--radius-lg);
+      padding: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 0 0 rgba(15, 23, 42, 0.6);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg,
+        rgba(129, 140, 248, 0.25),
+        transparent 35%,
+        transparent 65%,
+        rgba(52, 211, 153, 0.25));
+      opacity: 0;
+      transition: opacity var(--transition);
+      pointer-events: none;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(191, 219, 254, 0.98);
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.9);
+    }
+
+    .product-card:hover::before {
+      opacity: 1;
+    }
+
+    .product-image {
+      overflow: hidden;
+      border-radius: 14px;
+      aspect-ratio: 4 / 3;
+      background: radial-gradient(circle at 20% 20%, #1f2937, #020617);
+      border: 1px solid rgba(30, 64, 175, 0.7);
+      position: relative;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease-out;
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.05);
+    }
+
+    .product-tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 0.64rem;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: #e5e7eb;
+      backdrop-filter: blur(8px);
+    }
+
+    .product-body {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .product-title {
+      font-size: 0.86rem;
+      font-weight: 500;
+    }
+
+    .product-desc {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+      line-height: 1.4;
+      min-height: 2.1em;
+    }
+
+    .product-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      margin-top: 4px;
+    }
+
+    .price {
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
+    .badge-soft {
+      font-size: 0.68rem;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+    }
+
+    .product-actions {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .qty-badge {
+      font-size: 0.68rem;
+      color: var(--text-soft);
+    }
+
+    .btn-add {
+      border-radius: var(--radius-full);
+      padding: 6px 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(79, 70, 229, 0.14);
+      color: #a5b4fc;
+      border: 1px solid rgba(129, 140, 248, 0.9);
+      transition: var(--transition-fast);
+    }
+
+    .btn-add:hover {
+      background: radial-gradient(circle at top left, var(--accent), var(--accent-strong));
+      color: #e5e7eb;
+      box-shadow: 0 10px 22px rgba(79, 70, 229, 0.8);
+      transform: translateY(-1px);
+    }
+
+    /* Cart drawer */
+    .cart-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.7);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+      z-index: 30;
+    }
+
+    .cart-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 320px;
+      max-width: 95vw;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), #020617);
+      border-left: 1px solid rgba(148, 163, 184, 0.5);
+      box-shadow: -12px 0 32px rgba(15, 23, 42, 0.95);
+      transform: translateX(100%);
+      transition: transform var(--transition);
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-drawer.open {
+      transform: translateX(0);
+    }
+
+    .cart-header {
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cart-header h3 {
+      font-size: 0.95rem;
+    }
+
+    .cart-header small {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    .cart-close {
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      width: 26px;
+      height: 26px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-fast);
+    }
+
+    .cart-close:hover {
+      border-color: rgba(191, 219, 254, 0.98);
+      color: #e5e7eb;
+      transform: translateY(-1px);
+    }
+
+    .cart-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+    }
+
+    .cart-empty {
+      text-align: center;
+      color: var(--text-soft);
+      padding: 20px 0;
+      font-size: 0.78rem;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed rgba(148, 163, 184, 0.4);
+    }
+
+    .cart-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(30, 64, 175, 0.75);
+      background: #020617;
+    }
+
+    .cart-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .cart-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .cart-title {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .cart-meta {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+    }
+
+    .cart-qty {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .btn-qty {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      font-size: 0.76rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-fast);
+    }
+
+    .btn-qty:hover {
+      border-color: rgba(191, 219, 254, 0.95);
+      color: #e5e7eb;
+    }
+
+    .cart-price-col {
+      text-align: right;
+      font-size: 0.74rem;
+    }
+
+    .cart-line-total {
+      font-weight: 600;
+    }
+
+    .btn-remove {
+      margin-top: 4px;
+      border: none;
+      background: transparent;
+      color: var(--danger);
+      font-size: 0.68rem;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .cart-footer {
+      padding: 10px 14px 14px;
+      border-top: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.8rem;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), #020617);
+    }
+
+    .cart-summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .cart-summary-row strong {
+      font-size: 0.9rem;
+    }
+
+    .cart-summary-row span {
+      font-size: 0.82rem;
+    }
+
+    .cart-note {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+
+    .btn-checkout {
+      width: 100%;
+      border-radius: var(--radius-full);
+      padding: 8px 12px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 500;
+      background: radial-gradient(circle at top left, var(--accent), var(--accent-strong));
+      color: #e5e7eb;
+      box-shadow: 0 10px 24px rgba(79, 70, 229, 0.85);
+      transition: var(--transition-fast);
+    }
+
+    .btn-checkout:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+      background: rgba(75, 85, 99, 0.8);
+    }
+
+    .btn-checkout:not(:disabled):hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    /* Checkout modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+      z-index: 45;
+    }
+
+    .modal-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .modal.show {
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 16px;
+      border-radius: 22px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), #020617);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.98);
+      padding: 16px 16px 14px;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .modal.show .modal-card {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .modal-header h3 {
+      font-size: 0.98rem;
+    }
+
+    .modal-header p {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+    }
+
+    .modal-close {
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-soft);
+      width: 26px;
+      height: 26px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      transition: var(--transition-fast);
+    }
+
+    .modal-close:hover {
+      border-color: rgba(191, 219, 254, 0.98);
+      color: #e5e7eb;
+      transform: translateY(-1px);
+    }
+
+    .checkout-summary {
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      font-size: 0.74rem;
+      max-height: 140px;
+      overflow-y: auto;
+    }
+
+    .checkout-summary-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .checkout-summary-line span {
+      white-space: nowrap;
+    }
+
+    .checkout-summary-total {
+      margin-top: 4px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.6);
+      padding-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+    }
+
+    .checkout-step {
+      margin-bottom: 8px;
+    }
+
+    .checkout-step h4 {
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+    }
+
+    .checkout-hint {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      border-radius: var(--radius-full);
+      padding: 6px 11px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.96);
+      font-size: 0.78rem;
+      cursor: pointer;
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-fast);
+    }
+
+    .pill span.icon {
+      font-size: 0.9rem;
+    }
+
+    .pill.active {
+      background: radial-gradient(circle at top left, var(--accent), var(--accent-strong));
+      color: #e5e7eb;
+      border-color: rgba(219, 234, 254, 0.99);
+      box-shadow: 0 10px 22px rgba(79, 70, 229, 0.9);
+    }
+
+    .pill:hover {
+      border-color: rgba(191, 219, 254, 0.98);
+      transform: translateY(-1px);
+    }
+
+    .modal-footer {
+      margin-top: 6px;
+      font-size: 0.68rem;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    footer {
+      margin-top: 18px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(15, 23, 42, 0.95);
+      font-size: 0.7rem;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    footer a {
+      color: #a5b4fc;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="content">
+      <header>
+        <div class="logo-circle">
+          <div class="logo-inner">OS</div>
+        </div>
+        <div class="header-main">
+          <div class="header-top-row">
+            <div>
+              <div class="store-name">
+                OmStore
+                <div class="live-chip">
+                  <span class="live-dot"></span>
+                  <span>Store Aktif</span>
+                </div>
+              </div>
+            </div>
+            <button id="cartBtn" class="cart-button">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M5 6h2l1 10h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="10" cy="19" r="1" fill="currentColor" />
+                <circle cx="17" cy="19" r="1" fill="currentColor" />
+                <path d="M8 8h12l-1 5H9L8 8z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Keranjang
+              <span id="cartCount" class="cart-count">0</span>
+            </button>
+          </div>
+          <p class="header-subtitle">
+            Jual Akun Game, Cepat & Aman! 💰
+cari item? tentunya lengkap
+Mau jual akun? DM aja! 😊  #JualAkunGame"
+          </p>
+        </div>
+      </header>
+
+      <!-- Hero -->
+      <section class="hero">
+        <div class="hero-text">
+          <h1>
+            Welcome to <span class="highlight">𝙊𝙢𝙎𝙩𝙤𝙧𝙚</span>
+          </h1>
+          <div class="hero-badge-row">
+            <div class="hero-badge">
+              <span class="hero-badge-emoji">🛡️</span>
+              Store amanah & terpercaya
+            </div>
+            <div class="hero-badge">
+              <span class="hero-badge-emoji">⚡</span>
+              Proses cepat & efisien
+            </div>
+            <div class="hero-badge">
+              <span class="hero-badge-emoji">💳</span>
+              DANA • Gopay • QRIS
+            </div>
+          </div>
+          <p>
+            Nikmati pengalaman belanja yang simple, anti ribet, dan langsung terhubung ke admin lewat WhatsApp atau Telegram. Tinggal pilih barang, masukin keranjang, checkout, dan kirim bukti bayar. Beres!
+          </p>
+          <div class="hero-actions">
+            <button class="btn-primary" id="scrollProducts">
+              Mulai Belanja
+              <span>↓</span>
+            </button>
+            <button class="btn-ghost">
+              Layanan 24/7 · Support ramah
+            </button>
+          </div>
+        </div>
+        <div class="hero-media">
+          <div class="hero-media-img">
+            <!-- GANTI FOTO BANNER DI SINI -->
+            <img src="https://files.catbox.moe/xzr52d.jpg"
+                 alt="OmStore Banner" />
+          </div>
+          <div class="hero-floating">
+            <span>⭐</span>
+            <span>Order otomatis dengan chat format rapi</span>
+            <strong>NEW ORDER SYSTEM</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Products -->
+      <section id="products">
+        <div class="section-header">
+          <div>
+            <h2>Produk Pilihan</h2>
+            <p>Pilih barang, masuk keranjang, lalu checkout lewat WA / Telegram.</p>
+          </div>
+          <div class="section-label">
+            Dijamin Simple Anti Ribet. 
+          </div>
+        </div>
+
+        <div id="productGrid" class="product-grid"></div>
+      </section>
+
+      <footer>
+        <div>© <span id="year"></span> 𝙊𝙢𝙎𝙩𝙤𝙧𝙚 · All rights reserved.</div>
+        <div>Contact admin via WhatsApp / Telegram setelah checkout.</div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Cart drawer -->
+  <div id="cartBackdrop" class="cart-backdrop"></div>
+  <aside id="cartDrawer" class="cart-drawer" aria-label="Keranjang belanja">
+    <div class="cart-header">
+      <div>
+        <h3>Keranjang</h3>
+        <small id="cartSummaryText">0 item</small>
+      </div>
+      <button id="cartClose" class="cart-close">✕</button>
+    </div>
+    <div id="cartBody" class="cart-body"></div>
+    <div class="cart-footer">
+      <div class="cart-summary-row">
+        <span>Total</span>
+        <strong id="cartTotal">Rp0</strong>
+      </div>
+      <div class="cart-note">
+        Setelah checkout, kamu akan diarahkan untuk kirim pesanan ke admin via WhatsApp / Telegram.
+      </div>
+      <button id="checkoutBtn" class="btn-checkout" disabled>Checkout</button>
+    </div>
+  </aside>
+
+  <!-- Checkout modal -->
+  <div id="checkoutBackdrop" class="modal-backdrop"></div>
+  <div id="checkoutModal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3>Checkout Pesanan</h3>
+          <p>Pilih metode pembayaran, lalu kirim pesanan ke admin.</p>
+        </div>
+        <button id="checkoutClose" class="modal-close">✕</button>
+      </div>
+
+      <div id="checkoutSummary" class="checkout-summary"></div>
+
+      <div class="checkout-step">
+        <h4>1. Pilih metode pembayaran</h4>
+        <p class="checkout-hint">Pilih salah satu metode di bawah ini.</p>
+        <div id="paymentOptions" class="pill-row">
+          <button class="pill" data-pay="DANA">
+            <span class="icon">📘</span>
+            DANA
+          </button>
+          <button class="pill" data-pay="GOPAY">
+            <span class="icon">📗</span>
+            Gopay
+          </button>
+          <button class="pill" data-pay="QRIS">
+            <span class="icon">📕</span>
+            QRIS
+          </button>
+        </div>
+      </div>
+
+      <div class="checkout-step">
+        <h4>2. Kirim pesanan via</h4>
+        <p class="checkout-hint">Setelah pilih metode pembayaran, pilih mau kirim lewat WhatsApp atau Telegram.</p>
+        <div class="pill-row">
+          <button class="pill" data-chat="whatsapp">
+            <span class="icon">📱</span>
+            WhatsApp
+          </button>
+          <button class="pill" data-chat="telegram">
+            <span class="icon">📠</span>
+            Telegram
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span>Format chat akan otomatis terisi.</span>
+        <span>Pastikan kamu cek kembali sebelum kirim.</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========================
+    // DATA PRODUK
+    // ========================
+    // GANTI PRODUK, HARGA, DAN FOTO SESUAI KEBUTUHAN KAMU
+    const products = [
+      {
+        id: "p1",
+        name: "Akun Element Rod",
+        description: "akun yang memiliki item berupa element rod,dan memiliki singularity bait,jika beruntung akan mendapatkan 1-4 secret dan rod yang lengkap.",
+        price: 50000,
+        badge: "Best Seller",
+        image: "https://files.catbox.moe/wyqijg.jpg"
+      },
+      {
+        id: "p2",
+        name: "Akun Ghostfinn Rod",
+        description: "akun yang memiliki item berupa ghostfinn rod,dan memiliki singularity bait,jika beruntung akan mendapatkan 1-2 secret dan rod yang lengkap sampai bambo rod.",
+        price: 15000,
+        badge: "Populer",
+        image: "https://files.catbox.moe/b2fc6u.jpg"
+      },
+      {
+        id: "p3",
+        name: "Joki Element Rod",
+        description: "joki element rod, anda sulit selesaikan misi element rod? joki aja😆 proses aman dan cepat💰",
+        price: 70000,
+        badge: "Rekomended",
+        image: "https://files.catbox.moe/yhxc9o.jpg"
+      },
+      {
+        id: "p4",
+        name: "Joki Ghostfinn Rod",
+        description: "joki ghostfinn,membantu untuk mendapatkan ghostfinn rod proses cepat dan aman,dan bantu menambahkan  uang dan level",
+        price: 20000,
+        badge: " Banyak Peminat",
+        image: "https://files.catbox.moe/57y9cw.jpg"
+      },
+      {
+      id: "p5",
+        name: "Secret Tumbal",
+        description: "secret tumbal,untuk mendapat kan enchant yang diinginkan atau menyelesaikan misi ghostfinn.",
+        price: 2000,
+        badge: "POPULER",
+        image: "https://files.catbox.moe/ul15lt.jpg"
+      },
+      {
+        id: "p6",
+        name: "Joki Afk 1 Jam",
+        description: "Untuk anda yang hp nya suka panas, tetapi ingin dapat ikan bagus. joki afk ajaa, anti ribet, yang pemting peluang anda mendapatkan ikan bagus lumayan besar.",
+        price: 1000,
+        badge: "MURAH",
+        image: "https://files.catbox.moe/damvj7.jpg"
+      },
+      {
+      id: "p7",
+        name: "Joki Afk 12 Jam",
+        description: "Dapat kan Peluang secret yang begitu besar.dijamin pokoknya, anda tinggal nonton youtube. biar admin yang bekerja.",
+        price: 5000,
+        badge: "MURAH",
+        image: "https://files.catbox.moe/damvj7.jpg"
+      },
+      {
+        id: "p8",
+        name: "Joki Afk 24 Jam",
+        description: "Kalo lagi hari hoki, bsa dapat secret hingga lebih dari 1. dan anda cukup diam saja, karena sudah ada admin yang bermain. hemat waktu, tenaga, baterai, dll.",
+        price: 10000,
+        badge: "MURAH",
+        image: "https://files.catbox.moe/damvj7.jpg"
+      }
+    ];
+
+    // ========================
+    // KONFIGURASI KONTAK OWNER
+    // ========================
+    // GANTI NOMOR WA & USERNAME TELEGRAM KAMU DI SINI
+    const OWNER_WHATSAPP_NUMBER = "6285174058988"; // contoh: 6281234567890
+    const OWNER_TELEGRAM_USERNAME = "hafidzzacky"; // tanpa @
+
+    // ========================
+    // STATE
+    // ========================
+    let cart = [];
+    let selectedPayment = null;
+
+    // ========================
+    // ELEMENTS
+    // ========================
+    const productGrid = document.getElementById("productGrid");
+    const cartBtn = document.getElementById("cartBtn");
+    const cartDrawer = document.getElementById("cartDrawer");
+    const cartBackdrop = document.getElementById("cartBackdrop");
+    const cartClose = document.getElementById("cartClose");
+    const cartCountEl = document.getElementById("cartCount");
+    const cartBody = document.getElementById("cartBody");
+    const cartSummaryText = document.getElementById("cartSummaryText");
+    const cartTotalEl = document.getElementById("cartTotal");
+    const checkoutBtn = document.getElementById("checkoutBtn");
+
+    const checkoutModal = document.getElementById("checkoutModal");
+    const checkoutBackdrop = document.getElementById("checkoutBackdrop");
+    const checkoutClose = document.getElementById("checkoutClose");
+    const checkoutSummaryEl = document.getElementById("checkoutSummary");
+    const paymentOptionsEl = document.getElementById("paymentOptions");
+
+    const scrollProductsBtn = document.getElementById("scrollProducts");
+
+    // ========================
+    // UTIL
+    // ========================
+    function formatPrice(value) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0
+      }).format(value);
+    }
+
+    function findProduct(id) {
+      return products.find(p => p.id === id);
+    }
+
+    // ========================
+    // RENDER PRODUCTS
+    // ========================
+    function renderProducts() {
+      productGrid.innerHTML = "";
+      products.forEach(product => {
+        const card = document.createElement("article");
+        card.className = "product-card";
+        card.innerHTML = `
+          <div class="product-image">
+            <img src="${product.image}" alt="${product.name}" />
+            <div class="product-tag">${product.badge || "Produk"}</div>
+          </div>
+          <div class="product-body">
+            <div class="product-title">${product.name}</div>
+            <div class="product-desc">${product.description}</div>
+            <div class="product-meta">
+              <div class="price">${formatPrice(product.price)}</div>
+              <div class="badge-soft">Digital / Jasa</div>
+            </div>
+          </div>
+          <div class="product-actions">
+            <div class="qty-badge">Tambah ke keranjang dulu sebelum checkout.</div>
+            <button class="btn-add" onclick="addToCart('${product.id}')">
+              <span>+ Keranjang</span>
+            </button>
+          </div>
+        `;
+        productGrid.appendChild(card);
+      });
+    }
+
+    // ========================
+    // CART LOGIC
+    // ========================
+    function openCart() {
+      cartDrawer.classList.add("open");
+      cartBackdrop.classList.add("show");
+    }
+
+    function closeCart() {
+      cartDrawer.classList.remove("open");
+      cartBackdrop.classList.remove("show");
+    }
+
+    function updateCartCount() {
+      const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+      cartCountEl.textContent = totalQty;
+      cartSummaryText.textContent = totalQty + " item";
+      if (totalQty > 0) {
+        cartCountEl.style.display = "inline-flex";
+      } else {
+        cartCountEl.style.display = "none";
+      }
+    }
+
+    function renderCart() {
+      cartBody.innerHTML = "";
+      if (cart.length === 0) {
+        cartBody.innerHTML = '<div class="cart-empty">Keranjang masih kosong.<br/>Pilih produk dulu ya 😊</div>';
+        cartTotalEl.textContent = "Rp0";
+        checkoutBtn.disabled = true;
+        return;
+      }
+
+      checkoutBtn.disabled = false;
+
+      let total = 0;
+      cart.forEach(item => {
+        const product = findProduct(item.id);
+        if (!product) return;
+        const lineTotal = product.price * item.qty;
+        total += lineTotal;
+
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+          <div class="cart-thumb">
+            <img src="${product.image}" alt="${product.name}" />
+          </div>
+          <div class="cart-main">
+            <div class="cart-title">${product.name}</div>
+            <div class="cart-meta">${formatPrice(product.price)} / unit</div>
+            <div class="cart-qty">
+              <button class="btn-qty" onclick="changeQty('${item.id}', -1)">−</button>
+              <span>${item.qty}</span>
+              <button class="btn-qty" onclick="changeQty('${item.id}', 1)">+</button>
+            </div>
+            <button class="btn-remove" onclick="removeFromCart('${item.id}')">Hapus</button>
+          </div>
+          <div class="cart-price-col">
+            <div class="cart-line-total">${formatPrice(lineTotal)}</div>
+          </div>
+        `;
+        cartBody.appendChild(div);
+      });
+
+      cartTotalEl.textContent = formatPrice(total);
+    }
+
+    function addToCart(productId) {
+      const product = findProduct(productId);
+      if (!product) return;
+      const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id: productId, qty: 1 });
+      }
+      updateCartCount();
+      renderCart();
+      openCart();
+    }
+
+    function changeQty(productId, delta) {
+      const item = cart.find(i => i.id === productId);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== productId);
+      }
+      updateCartCount();
+      renderCart();
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(i => i.id !== productId);
+      updateCartCount();
+      renderCart();
+    }
+
+    // ========================
+    // CHECKOUT
+    // ========================
+    function openCheckoutModal() {
+      if (cart.length === 0) return;
+      selectedPayment = null;
+      // reset payment button state
+      paymentOptionsEl.querySelectorAll(".pill").forEach(btn => btn.classList.remove("active"));
+      renderCheckoutSummary();
+      checkoutBackdrop.classList.add("show");
+      checkoutModal.classList.add("show");
+    }
+
+    function closeCheckoutModal() {
+      checkoutBackdrop.classList.remove("show");
+      checkoutModal.classList.remove("show");
+    }
+
+    function renderCheckoutSummary() {
+      if (cart.length === 0) {
+        checkoutSummaryEl.innerHTML = "<em>Keranjang kosong.</em>";
+        return;
+      }
+      let total = 0;
+      let html = "";
+      cart.forEach(item => {
+        const product = findProduct(item.id);
+        if (!product) return;
+        const lineTotal = product.price * item.qty;
+        total += lineTotal;
+        html += `
+          <div class="checkout-summary-line">
+            <span>${item.qty}x ${product.name}</span>
+            <span>${formatPrice(lineTotal)}</span>
+          </div>
+        `;
+      });
+      html += `
+        <div class="checkout-summary-total">
+          <span>Total</span>
+          <strong>${formatPrice(total)}</strong>
+        </div>
+      `;
+      checkoutSummaryEl.innerHTML = html;
+    }
+
+    function handlePaymentSelect(pay) {
+      selectedPayment = pay;
+      paymentOptionsEl.querySelectorAll(".pill").forEach(btn => {
+        if (btn.getAttribute("data-pay") === pay) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+    }
+
+    function buildOrderMessage() {
+      const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+      let totalPrice = 0;
+      let barangLines = "";
+      cart.forEach(item => {
+        const product = findProduct(item.id);
+        if (!product) return;
+        const lineTotal = product.price * item.qty;
+        totalPrice += lineTotal;
+        barangLines += `- ${product.name} x${item.qty}\n`;
+      });
+
+      const waktu = new Date().toLocaleString("id-ID", {
+        dateStyle: "short",
+        timeStyle: "short"
+      });
+
+      const totalPriceFormatted = formatPrice(totalPrice);
+
+      // Template pesan sesuai format yang kamu minta
+      const msg = `╭━─━ 𝙉𝙀𝙒 𝙊𝙍𝘿𝙀𝙍━─━©
+📦𝔹𝕒𝕣𝕒𝕟𝕘 :
+${barangLines}📥𝕁𝕦𝕞𝕝𝕒𝕙 : ${totalQty} item
+💵ℙℝ𝕀ℂ𝔼 : ${totalPriceFormatted}
+🏧𝕄𝔼𝕋𝕆𝔻𝔼 : ${selectedPayment || "-"}
+⏰𝕎𝔸𝕂𝕌 : ${waktu}
+
+Nama:
+ID / Username:
+Catatan tambahan:`;
+
+      return msg;
+    }
+
+    function sendOrderVia(chatType) {
+      if (!selectedPayment) {
+        alert("Pilih metode pembayaran dulu ya (DANA / Gopay / QRIS).");
+        return;
+      }
+      if (cart.length === 0) {
+        alert("Keranjang masih kosong.");
+        return;
+      }
+
+      const message = buildOrderMessage();
+      const encoded = encodeURIComponent(message);
+
+      if (chatType === "whatsapp") {
+        const url = `https://wa.me/${OWNER_WHATSAPP_NUMBER}?text=${encoded}`;
+        window.open(url, "_blank");
+      } else if (chatType === "telegram") {
+        const url = `https://t.me/${OWNER_TELEGRAM_USERNAME}?text=${encoded}`;
+        window.open(url, "_blank");
+      }
+
+      // Optionally, kamu bisa kosongin keranjang setelah user diarahkan:
+      // cart = [];
+      // updateCartCount();
+      // renderCart();
+
+      closeCheckoutModal();
+      closeCart();
+    }
+
+    // ========================
+    // EVENT LISTENERS
+    // ========================
+    cartBtn.addEventListener("click", openCart);
+    cartClose.addEventListener("click", closeCart);
+    cartBackdrop.addEventListener("click", closeCart);
+
+    checkoutBtn.addEventListener("click", () => {
+      if (cart.length === 0) return;
+      openCheckoutModal();
+    });
+
+    checkoutClose.addEventListener("click", closeCheckoutModal);
+    checkoutBackdrop.addEventListener("click", closeCheckoutModal);
+
+    paymentOptionsEl.querySelectorAll(".pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const pay = btn.getAttribute("data-pay");
+        handlePaymentSelect(pay);
+      });
+    });
+
+    document.querySelectorAll("[data-chat]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const type = btn.getAttribute("data-chat");
+        sendOrderVia(type);
+      });
+    });
+
+    if (scrollProductsBtn) {
+      scrollProductsBtn.addEventListener("click", () => {
+        const section = document.getElementById("products");
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    }
+
+    // ========================
+    // GLOBAL UNTUK ONCLICK DI HTML
+    // ========================
+    window.addToCart = addToCart;
+    window.changeQty = changeQty;
+    window.removeFromCart = removeFromCart;
+
+    // Init
+    renderProducts();
+    updateCartCount();
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
